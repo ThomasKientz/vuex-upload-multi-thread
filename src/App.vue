@@ -1,17 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div>total completed : {{ $store.state.completed.length }}</div>
+    <div>current : {{ $store.state.current }}</div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
 export default {
   name: "app",
-  components: {
-    HelloWorld
+
+  mounted() {
+    this.uploadAll();
+  },
+
+  methods: {
+    uploadAll() {
+      this.$store.subscribeAction({
+        after: (action, state) => {
+          console.log(`after action ${action.type}`);
+          if (state.buffer.length) this.$store.dispatch("uploadNext");
+        }
+      });
+
+      this.$store.dispatch("uploadNext");
+      this.$store.dispatch("uploadNext");
+      this.$store.dispatch("uploadNext");
+    }
   }
 };
 </script>
